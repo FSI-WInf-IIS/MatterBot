@@ -21,8 +21,9 @@ const (
 	USER_FIRST    = "SSI"
 	USER_LAST     = "Bot"
 
-	TEAM_NAME        = "general"
-	CHANNEL_LOG_NAME = "ssi_bot_debug"
+	TEAM_NAME         = "general"
+	CHANNEL_LOG_NAME  = "ssi_bot_debug"
+	MAIN_CHANNEL_NAME = "town-square"
 )
 
 var client *model.Client4
@@ -31,6 +32,7 @@ var webSocketClient *model.WebSocketClient
 var botUser *model.User
 var botTeam *model.Team
 var debuggingChannel *model.Channel
+var mainChannel *model.Channel
 
 // Documentation for the Go driver can be found
 // at https://godoc.org/github.com/mattermost/platform/model#Client
@@ -62,6 +64,13 @@ func main() {
 	// Lets create a bot channel for logging debug messages into
 	CreateBotDebuggingChannelIfNeeded()
 	SendMsgToDebuggingChannel("_"+SAMPLE_NAME+" has **started** running_", "")
+
+	if rchannel, resp := client.GetChannelByName(MAIN_CHANNEL_NAME, botTeam.Id, ""); resp.Error != nil {
+		println("We failed to get the channels")
+		PrintError(resp.Error)
+	} else {
+		mainChannel = rchannel
+	}
 
 	// Lets start listening to some channels via the websocket!
 	webSocketClient, err := model.NewWebSocketClient4("ws://mattermost.fsi-winf.de", client.AuthToken)
@@ -145,7 +154,7 @@ func CreateBotDebuggingChannelIfNeeded() {
 	// Looks like we need to create the logging channel
 	channel := &model.Channel{}
 	channel.Name = CHANNEL_LOG_NAME
-	channel.DisplayName = "Debugging For Sample Bot"
+	channel.DisplayName = "Debugging For SSI Bot"
 	channel.Purpose = "This is used as a test channel for logging bot debug messages"
 	channel.Type = model.CHANNEL_OPEN
 	channel.TeamId = botTeam.Id
@@ -172,22 +181,21 @@ func SendMsgToDebuggingChannel(msg string, replyToId string) {
 }
 
 func HandleWebSocketResponse(event *model.WebSocketEvent) {
-	HandleMsgFromDebuggingChannel(event)
-}
-
-func HandleMsgFromDebuggingChannel(event *model.WebSocketEvent) {
-	// If this isn't the debugging channel then lets ingore it
-	if event.Broadcast.ChannelId != debuggingChannel.Id {
-		return
-	}
-
-	// Lets only reponded to messaged posted events
+	// only answer to posted events
 	if event.Event != model.WEBSOCKET_EVENT_POSTED {
 		return
 	}
 
-	println("responding to debugging channel msg")
+	// If this isn't the debugging channel then lets ingore it
+	if event.Broadcast.ChannelId == debuggingChannel.Id {
+		HandleMsgFromDebuggingChannel(event)
+	} else if event.Broadcast.ChannelId == mainChannel.Id {
+		HandleMsgFromMainChannel(event)
+	}
+}
 
+func HandleMsgFromDebuggingChannel(event *model.WebSocketEvent) {
+	println("responding to debugging channel msg")
 	post := model.PostFromJson(strings.NewReader(event.Data["post"].(string)))
 	if post != nil {
 
@@ -227,6 +235,15 @@ func HandleMsgFromDebuggingChannel(event *model.WebSocketEvent) {
 	}
 
 	SendMsgToDebuggingChannel("I did not understand you!", post.Id)
+}
+
+func HandleMsgFromMainChannel(event *model.WebSocketEvent) {
+	println("responding to main channel msg")
+
+	post := model.PostFromJson(strings.NewReader(event.Data["post"].(string)))
+	if post != nil {
+		client.DeletePost(post.Id)
+	}
 }
 
 func PrintError(err *model.AppError) {
