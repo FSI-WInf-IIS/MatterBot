@@ -1,4 +1,6 @@
-# Mattermost Bot Sample
+# MatterBot
+
+A bot for Mattermost from the FSI WInf/IIS based on https://github.com/mattermost/mattermost-bot-sample-golang.
 
 ## Overview
 
