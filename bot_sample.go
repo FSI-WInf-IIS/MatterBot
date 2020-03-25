@@ -4,6 +4,7 @@
 package main
 
 import (
+	"fmt"
 	"os"
 	"os/signal"
 	"regexp"
@@ -174,6 +175,10 @@ func SendMsgToDebuggingChannel(msg string, replyToId string) {
 
 	post.RootId = replyToId
 
+	SendMsgToChannel(post)
+}
+
+func SendMsgToChannel(post *model.Post) {
 	if _, resp := client.CreatePost(post); resp.Error != nil {
 		println("We failed to send a message to the logging channel")
 		PrintError(resp.Error)
@@ -182,15 +187,24 @@ func SendMsgToDebuggingChannel(msg string, replyToId string) {
 
 func HandleWebSocketResponse(event *model.WebSocketEvent) {
 	// only answer to posted events
-	if event.Event != model.WEBSOCKET_EVENT_POSTED {
+	if event.Event == model.WEBSOCKET_EVENT_TYPING {
+		if event.Data["user_id"] == "qa8frsba7fd4mji4nt39pjtsmc" && event.Broadcast.ChannelId == debuggingChannel.Id {
+			SendMsgToDebuggingChannel("Max, hör auf zu schreiben!", "")
+		}
 		return
 	}
 
-	// If this isn't the debugging channel then lets ingore it
-	if event.Broadcast.ChannelId == debuggingChannel.Id {
-		HandleMsgFromDebuggingChannel(event)
-	} else if event.Broadcast.ChannelId == mainChannel.Id {
-		HandleMsgFromMainChannel(event)
+	if event.Event == model.WEBSOCKET_EVENT_NEW_USER {
+		HandleNewUser(event)
+	}
+
+	if event.Event == model.WEBSOCKET_EVENT_POSTED {
+		// If this isn't the debugging channel then lets ingore it
+		if event.Broadcast.ChannelId == debuggingChannel.Id {
+			HandleMsgFromDebuggingChannel(event)
+		} else if event.Broadcast.ChannelId == mainChannel.Id {
+			HandleMsgFromMainChannel(event)
+		}
 	}
 }
 
@@ -244,6 +258,25 @@ func HandleMsgFromMainChannel(event *model.WebSocketEvent) {
 	if post != nil {
 		client.DeletePost(post.Id)
 	}
+}
+
+func HandleNewUser(event *model.WebSocketEvent) {
+	println("new user!")
+
+	userId := event.Data["user_id"].(string)
+	channel, response := client.CreateDirectChannel(botUser.Id, userId)
+	if response.StatusCode != 201 {
+		SendMsgToDebuggingChannel(fmt.Sprintf("failed to establish private channel to %v", "user.Nickname"), "")
+		return
+	}
+	user, resp := client.GetUser(userId, "")
+	if resp.StatusCode != 200 {
+		fmt.Printf("failed getting user for id %v", userId)
+	}
+	post := &model.Post{}
+	post.ChannelId = channel.Id
+	post.Message = fmt.Sprintf("Hallo %v!", user.Username)
+	client.CreatePost(post)
 }
 
 func PrintError(err *model.AppError) {
