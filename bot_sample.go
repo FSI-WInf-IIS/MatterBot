@@ -13,16 +13,16 @@ import (
 )
 
 const (
-	SAMPLE_NAME = "Mattermost Bot Sample"
+	SAMPLE_NAME = "SSI Mattermost Bot"
 
-	USER_EMAIL    = "bot@example.com"
-	USER_PASSWORD = "password1"
-	USER_NAME     = "samplebot"
-	USER_FIRST    = "Sample"
+	USER_EMAIL    = "ssi@fsi-winf.de"
+	USER_PASSWORD = ";svCF^20rT"
+	USER_NAME     = "ssibot"
+	USER_FIRST    = "SSI"
 	USER_LAST     = "Bot"
 
-	TEAM_NAME        = "botsample"
-	CHANNEL_LOG_NAME = "debugging-for-sample-bot"
+	TEAM_NAME        = "general"
+	CHANNEL_LOG_NAME = "ssi_bot_debug"
 )
 
 var client *model.Client4
@@ -39,7 +39,7 @@ func main() {
 
 	SetupGracefulShutdown()
 
-	client = model.NewAPIv4Client("http://localhost:8065")
+	client = model.NewAPIv4Client("https://mattermost.fsi-winf.de")
 
 	// Lets test to see if the mattermost server is up and running
 	MakeSureServerIsRunning()
@@ -64,7 +64,7 @@ func main() {
 	SendMsgToDebuggingChannel("_"+SAMPLE_NAME+" has **started** running_", "")
 
 	// Lets start listening to some channels via the websocket!
-	webSocketClient, err := model.NewWebSocketClient4("ws://localhost:8065", client.AuthToken)
+	webSocketClient, err := model.NewWebSocketClient4("ws://mattermost.fsi-winf.de", client.AuthToken)
 	if err != nil {
 		println("We failed to connect to the web socket")
 		PrintError(err)
@@ -217,6 +217,11 @@ func HandleMsgFromDebuggingChannel(event *model.WebSocketEvent) {
 		// if you see any word matching 'hello' then respond
 		if matched, _ := regexp.MatchString(`(?:^|\W)hello(?:$|\W)`, post.Message); matched {
 			SendMsgToDebuggingChannel("Yes I'm running", post.Id)
+			return
+		}
+		// if you see any word matching 'hello' then respond
+		if matched, _ := regexp.MatchString(`(?:^|\W)geilste(?:$|\W)`, post.Message); matched {
+			SendMsgToDebuggingChannel("Eindeutig Fabian!", post.Id)
 			return
 		}
 	}
