@@ -289,8 +289,10 @@ func HandleNewUser(event *model.WebSocketEvent) {
 		"- Diskussionsmöglichkeiten \n" +
 		"- Initiativen-Koordination Online \n" +
 		"- trotz Social Distancing neue Kontakte knüpfen in einem zielorientierten Umfeld für " +
-		"Studierende aus ganz Deutschland \n\n " +
-		"Alle channel die mit T_ beginnen, setzen sich mit einem bestimmten Thema außeinander, " +
+		"Studierende aus ganz Deutschland"
+	client.CreatePost(post)
+	time.Sleep(1 * time.Second)
+	post.Message = "Alle channel die mit T_ beginnen, setzen sich mit einem bestimmten Thema außeinander, " +
 		"alle die mit P_ beginnen, beinhalten alle Studierende eines bestimmten Studiengangs, " +
 		"und alle die mit S_ beginnen beinhalten Platz für Soziale Interaktion. " +
 		"Gründet einen neuen Channel und ladet Leute dahin ein, um euer ganz spezifisches Thema zu verfolgen. " +
