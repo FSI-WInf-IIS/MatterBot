@@ -309,6 +309,16 @@ func HandleNewUser(event *model.WebSocketEvent) {
 		"wird ein neuer Channel erstellt \n " +
 		"- ~memes: Ein Platz für den ganz offenen Austausch. Hier werden vermutlich die meisten Memes & co. geteilt"
 	client.CreatePost(post)
+	time.Sleep(1 * time.Second)
+	post.Message = "Auswahl an aktuellen Channeln:\n " +
+		"- ~t_beginner_programming: Austausch über den Einstieg in die Programmierung. \n " +
+		"- ~t_mit_cs_missing_semester: Hier wird das MIT Missing CS Semester gemeinsam durchgearbeitet " +
+		"(https://missing.csail.mit.edu) - geeignet für Einsteiger und Fortgeschrittene. \n" +
+		"- ~t_web_programming: Hier kannn du mit anderen gemeinsam Webb Programming lernen. \n" +
+		"- ~u_fau: Ein Channel für alle Studierenden der FAU. \n" +
+		"- ~s_spieleabend: Ein Channel für unsere regelmäßigen Spieleabende. \n\n" +
+		"Viele Grüße \n eure FSI WInf/IIS x FS WIAI"
+	client.CreatePost(post)
 }
 
 func PrintError(err *model.AppError) {
