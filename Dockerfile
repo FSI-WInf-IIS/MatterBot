@@ -1,11 +1,6 @@
-FROM golang:alpine as builder
-RUN mkdir /build
-ADD . /build/
-WORKDIR /build
-RUN go build -o main .
-FROM scratch
-RUN adduser -S -D -H -h /app appuser
-USER appuser
-COPY --from=builder /build/main /app/
+FROM golang:latest
+RUN mkdir /app
+ADD . /app/
 WORKDIR /app
-CMD ["./main"]
+RUN go build -o main .
+CMD ["/app/main"]

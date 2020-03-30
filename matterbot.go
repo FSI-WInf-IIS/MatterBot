@@ -301,10 +301,6 @@ func HandleNewUser(event *model.WebSocketEvent) {
 		"\"_Town Square\": Ein Platz für den ganz offenen Austausch. Hier werden vermutlich die meisten Memes & co. " +
 		"geteilt"
 	client.CreatePost(post)
-	time.Sleep(1 * time.Second)
-	post.Message = "Mit welchen Themen willst du dich als Mitglied unserer Initiative auseinandersetzen:\n" +
-		"- Machine Learning\n- Programmierung\n- CS-General\n- Zeig mir alles!"
-	client.CreatePost(post)
 }
 
 func PrintError(err *model.AppError) {
