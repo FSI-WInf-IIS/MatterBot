@@ -24,7 +24,7 @@ const (
 	USER_LAST     = "Hiwi"
 
 	TEAM_NAME         = "general"
-	CHANNEL_LOG_NAME  = "ssi_bot_debug"
+	CHANNEL_LOG_NAME  = "hiwi-debugging"
 	MAIN_CHANNEL_NAME = "town-square"
 )
 
@@ -204,7 +204,8 @@ func HandleWebSocketResponse(event *model.WebSocketEvent) {
 		if event.Broadcast.ChannelId == debuggingChannel.Id {
 			HandleMsgFromDebuggingChannel(event)
 		} else if event.Broadcast.ChannelId == mainChannel.Id {
-			HandleMsgFromMainChannel(event)
+			//Handling no longer needed
+			//HandleMsgFromMainChannel(event)
 		}
 	}
 }
@@ -280,26 +281,33 @@ func HandleNewUser(event *model.WebSocketEvent) {
 	client.CreatePost(post)
 	time.Sleep(1 * time.Second)
 	post.Message = "willkommen bei der “Student Socialization Initiative against COVID-19” (SSI), einer Initiative der " +
-		"FSI WInf/IIS der FAU und der FS WIAI der OFU."
+		"FSI WInf/IIS der FAU und der FS WIAI der OFU. "
 	client.CreatePost(post)
 	time.Sleep(1 * time.Second)
-	post.Message = "Die Idee hinter dieser Initiative ist:\n" +
-		"- Lernaustausch\n" +
-		"- Diskussionsmöglichkeiten\n" +
-		"- Initiativen-Koordination Online\n" +
-		"- trotz Social Distancing neue Kontakte knüpfen in einem zielorientierten Umfeld für Studierende aus " +
-		"ganz Deutschland"
+	post.Message = "Die Idee hinter dieser Initiative ist: \n" +
+		"- Lernaustausch \n" +
+		"- Diskussionsmöglichkeiten \n" +
+		"- Initiativen-Koordination Online \n" +
+		"- trotz Social Distancing neue Kontakte knüpfen in einem zielorientierten Umfeld für " +
+		"Studierende aus ganz Deutschland \n " +
+		"Alle channel die mit T_ beginnen, setzen sich mit einem bestimmten Thema außeinander, " +
+		"alle die mit P_ beginnen, beinhalten alle Studierende eines bestimmten Studiengangs, " +
+		"und alle die mit S_ beginnen beinhalten Platz für Soziale Interaktion. " +
+		"Gründet einen neuen Channel und ladet Leute dahin ein, um euer ganz spezifisches Thema zu verfolgen. " +
+		"(Manchmal muss man die Seite neu Laden um die Möglichkeit, neue Channels zu erzeugen, zu sehen.) \n\n" +
+		"Um Videokonferenzen zu starten, klickt einfach oben rechts auf das kleine Kamerasymbol."
 	client.CreatePost(post)
 	time.Sleep(1 * time.Second)
-	post.Message = "\"_main\": Hier findet ihr eine stets aktuelle Übersicht der Initiative\n" +
-		"\"_news\": Neuigkeiten zu SSI und neue Lern- und Austauschmöglichkeiten\n" +
-		"\"_Lectures\": Wenn ihr einen Vortrag zu einem Thema halten wollt, dann könnt ihr das hier vorschlagen oder " +
-		"einfach Vorträgen zuhören die hier stattfinden.\n" +
-		"\"_Q&A\": Ihr habt ein Problem? Hier könnt ihr nach Lösungen fragen\n" +
-		"\"_Topic Suggestions\": Hier könnt ihr neue Themenvorschläge einbringen. Für diese wird dann eine Umfrage " +
-		"gestartet, und wenn sich genügend Leute finden, wird ein neuer Channel erstellt\n" +
-		"\"_Town Square\": Ein Platz für den ganz offenen Austausch. Hier werden vermutlich die meisten Memes & co. " +
-		"geteilt"
+	post.Message = "Wir haben folgende allgemeine Channel:\n " +
+		"- ~town-square: Hier findet ihr eine stets aktuelle Übersicht der Initiative \n " +
+		"- ~news: Neuigkeiten zu SSI und neue Lern- und Austauschmöglichkeiten \n " +
+		"- ~lectures: Wenn ihr einen Vortrag zu einem Thema halten wollt, dann könnt ihr das hier vorschlagen " +
+		"oder einfach Vorträgen zuhören die hier stattfinden. \n " +
+		"- ~q_a: Ihr habt ein Problem? Hier könnt ihr nach Lösungen fragen \n " +
+		"- ~topic_suggestions: Hier könnt ihr neue Themenvorschläge einbringen. " +
+		"Für diese wird dann eine Umfrage gestartet, und wenn sich genügend Leute finden, " +
+		"wird ein neuer Channel erstellt \n " +
+		"- ~memes: Ein Platz für den ganz offenen Austausch. Hier werden vermutlich die meisten Memes & co. geteilt"
 	client.CreatePost(post)
 }
 
