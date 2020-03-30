@@ -289,7 +289,7 @@ func HandleNewUser(event *model.WebSocketEvent) {
 		"- Diskussionsmöglichkeiten \n" +
 		"- Initiativen-Koordination Online \n" +
 		"- trotz Social Distancing neue Kontakte knüpfen in einem zielorientierten Umfeld für " +
-		"Studierende aus ganz Deutschland \n " +
+		"Studierende aus ganz Deutschland \n\n " +
 		"Alle channel die mit T_ beginnen, setzen sich mit einem bestimmten Thema außeinander, " +
 		"alle die mit P_ beginnen, beinhalten alle Studierende eines bestimmten Studiengangs, " +
 		"und alle die mit S_ beginnen beinhalten Platz für Soziale Interaktion. " +
