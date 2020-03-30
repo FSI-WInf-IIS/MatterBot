@@ -19,9 +19,9 @@ const (
 
 	USER_EMAIL    = "ssi@fsi-winf.de"
 	USER_PASSWORD = ";svCF^20rT"
-	USER_NAME     = "ssibot"
+	USER_NAME     = "hiwi"
 	USER_FIRST    = "SSI"
-	USER_LAST     = "Bot"
+	USER_LAST     = "Hiwi"
 
 	TEAM_NAME         = "general"
 	CHANNEL_LOG_NAME  = "ssi_bot_debug"
